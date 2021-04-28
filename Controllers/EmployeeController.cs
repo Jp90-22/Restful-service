@@ -76,6 +76,30 @@ namespace WebAPI.Controllers
             myConnection.Open();  
             int rowDeleted = sqlCmd.ExecuteNonQuery();  
             myConnection.Close();  
-        }  
+        }
+
+        [HttpPost]
+        [ActionName("UpdateEmployee")]
+        public void UpdateEmployeeByID(int id, Employee employee)
+        {
+            myConnection = new SqlConnection();
+            myConnection.ConnectionString = connectionStr;
+
+            sqlCmd = new SqlCommand();
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.CommandText = "update tblEmployee " +
+                        "set EmployeeId = @EmployeeId, set Name = @Name, set ManagerId = @ManagerId " + 
+                        "where EmployeeId = @id";
+            sqlCmd.Connection = myConnection;
+
+            sqlCmd.Parameters.AddWithValue("@EmployeeId", employee.EmployeeID);  
+            sqlCmd.Parameters.AddWithValue("@Name", employee.Name);  
+            sqlCmd.Parameters.AddWithValue("@ManagerId", employee.ManagerID);
+            sqlCmd.Parameters.AddWithValue("@id", id);
+
+            myConnection.Open();  
+            int rowUpdated= sqlCmd.ExecuteNonQuery(); //Update a row 
+            myConnection.Close();  
+        }
     }
 }
