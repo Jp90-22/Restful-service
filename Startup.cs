@@ -52,7 +52,9 @@ namespace WebAPI
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Employee}/{action=GetEmployeeByID}/{id?}");
             });
         }
     }
