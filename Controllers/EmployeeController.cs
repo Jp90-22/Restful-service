@@ -6,16 +6,19 @@ using WebAPI.Models;
 
 namespace WebAPI.Controllers
 {
-    public class EmployeeController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class EmployeeController : ControllerBase
     {
         private const string connectionStr = @"Server=localhost;Database=dbAPI;User ID=sql;Password=1234;";
         private SqlConnection myConnection;
         private SqlDataReader reader = null;
         private SqlCommand sqlCmd;
 
-        [HttpGet]  
-        [ActionName("GetEmployeeByID")]  
-        public Employee Get(int id)  
+        // GET: /api/Employee/
+        [HttpGet("{id}")]  
+        // [ActionName("GetEmployeeByID")] 
+        public Employee GetEmployeeByID(int id)  
         {  
             //return list of Emp;  
             myConnection = new SqlConnection();  
@@ -41,8 +44,9 @@ namespace WebAPI.Controllers
             myConnection.Close();
             return emp;  
         }
-
-        [HttpPost] 
+        
+        // POST: /api/Employee/
+        [HttpPost]
         public void AddEmployee(Employee employee)  
         {
             myConnection = new SqlConnection();  
@@ -62,7 +66,9 @@ namespace WebAPI.Controllers
             myConnection.Close();  
         } 
 
-        [ActionName("DeleteEmployee")]  
+        // DELETE: /api/Employee/
+        [HttpDelete("{id}")]
+        // [ActionName("DeleteEmployee")]  
         public void DeleteEmployeeByID(int id)  
         {  
             myConnection = new SqlConnection();  
@@ -78,9 +84,10 @@ namespace WebAPI.Controllers
             myConnection.Close();  
         }
 
-        [HttpPost]
-        [ActionName("UpdateEmployee")]
-        public void UpdateEmployeeByID(int id, Employee employee)
+        // PUT: /api/Employee/
+        [HttpPut]
+        // [ActionName("UpdateEmployee")]
+        public string UpdateEmployeeByID(int id, Employee employee)
         {
             myConnection = new SqlConnection();
             myConnection.ConnectionString = connectionStr;
@@ -88,8 +95,8 @@ namespace WebAPI.Controllers
             sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.CommandText = "update tblEmployee " +
-                        "set EmployeeId = @EmployeeId, set Name = @Name, set ManagerId = @ManagerId " + 
-                        "where EmployeeId = @id";
+                        "set EmployeeId=@EmployeeId, Name=@Name, ManagerId=@ManagerId " + 
+                        "where EmployeeId=@id";
             sqlCmd.Connection = myConnection;
 
             sqlCmd.Parameters.AddWithValue("@EmployeeId", employee.EmployeeID);  
@@ -97,9 +104,10 @@ namespace WebAPI.Controllers
             sqlCmd.Parameters.AddWithValue("@ManagerId", employee.ManagerID);
             sqlCmd.Parameters.AddWithValue("@id", id);
 
-            myConnection.Open();  
-            int rowUpdated= sqlCmd.ExecuteNonQuery(); //Update a row 
+            myConnection.Open();
+            sqlCmd.ExecuteNonQuery(); //Update a row 
             myConnection.Close();  
+            return "El id es: "+id;
         }
     }
 }
