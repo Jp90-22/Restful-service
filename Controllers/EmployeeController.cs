@@ -84,10 +84,10 @@ namespace WebAPI.Controllers
             myConnection.Close();  
         }
 
-        // PUT: /api/Employee/
-        [HttpPut]
+        // PUT: /api/Employee/{id}
+        [HttpPut("{id}")]
         // [ActionName("UpdateEmployee")]
-        public string UpdateEmployeeByID(int id, Employee employee)
+        public void UpdateEmployeeByID(int id, Employee employee)
         {
             myConnection = new SqlConnection();
             myConnection.ConnectionString = connectionStr;
@@ -107,7 +107,6 @@ namespace WebAPI.Controllers
             myConnection.Open();
             sqlCmd.ExecuteNonQuery(); //Update a row 
             myConnection.Close();  
-            return "El id es: "+id;
         }
     }
 }
